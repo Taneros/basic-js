@@ -1,7 +1,7 @@
-import { NotImplementedError } from '../extensions/index.js';
+import { NotImplementedError } from '../extensions/index.js'
 
-const MODERN_ACTIVITY = 15;
-const HALF_LIFE_PERIOD = 5730;
+const MODERN_ACTIVITY = 15
+const HALF_LIFE_PERIOD = 5730
 
 /**
  * Determine the age of archeological find by using
@@ -18,19 +18,19 @@ const HALF_LIFE_PERIOD = 5730;
  *
  */
 export default function dateSample(sample) {
-  if (arguments.length === 0) false;
+  if (arguments.length === 0) false
 
-  if (typeof sample !== 'string') return false;
+  if (typeof sample !== 'string') return false
 
   if (!isNaN(sample) && Number(sample) > 0 && Number(sample) < 15) {
-    sample = sample.match(/\d.*/gm);
-    const N_0_over_N = MODERN_ACTIVITY / sample;
-    const k = 0.693 / HALF_LIFE_PERIOD;
-    let t = Math.ceil(Math.log(N_0_over_N) / k);
+    // sample = sample.match(/\d.*/gm);
+    const N_0_over_N = MODERN_ACTIVITY / sample
+    const k = 0.693 / HALF_LIFE_PERIOD
+    let t = Math.ceil(Math.log(N_0_over_N) / k)
 
-    return t;
+    return t
   }
-  return false;
+  return false
 }
 
 // console.log(dateSample('1'));
