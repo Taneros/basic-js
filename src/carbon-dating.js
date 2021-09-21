@@ -18,9 +18,9 @@ const HALF_LIFE_PERIOD = 5730
  *
  */
 export default function dateSample(sample) {
-  if (arguments.length === 0) false
+  if (arguments.length === 0) return false
 
-  if (typeof sample !== 'string') false
+  if (typeof sample !== 'string') return false
 
   if (!isNaN(sample) && Number(sample) > 0 && Number(sample) < 15) {
     // sample = sample.match(/\d.*/gm);
@@ -37,17 +37,17 @@ export default function dateSample(sample) {
 // console.log(dateSample('-1'));
 // console.log(dateSample('WOOT!'));
 
-// console.log(dateSample('3'), 13305);
-// console.log(dateSample('1'), 22387);
-// console.log(dateSample('9'), 4223);
-// console.log(dateSample('11'), 2564);
+// console.log(dateSample('3'), 13305)
+// console.log(dateSample('1'), 22387)
+// console.log(dateSample('9'), 4223)
+// console.log(dateSample('11'), 2564)
 
-// console.log(dateSample('3.142'), 12923);
-// console.log(dateSample('1.1'), 21599);
-// console.log(dateSample('9.8888'), 3445);
-// console.log(dateSample('9.59383373526808'), 3695);
-// console.log(dateSample('9.122605776326203'), 4111);
-// console.log(dateSample('8.738732722522064'), 4467);
+// console.log(dateSample('3.142'), 12923)
+// console.log(dateSample('1.1'), 21599)
+// console.log(dateSample('9.8888'), 3445)
+// console.log(dateSample('9.59383373526808'), 3695)
+// console.log(dateSample('9.122605776326203'), 4111)
+// console.log(dateSample('8.738732722522064'), 4467)
 
 // console.log(dateSample(3), false);
 // console.log(dateSample(3.312312), false);
