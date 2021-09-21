@@ -20,7 +20,7 @@ const HALF_LIFE_PERIOD = 5730
 export default function dateSample(sample) {
   if (arguments.length === 0) false
 
-  if (typeof sample !== 'string') return false
+  if (typeof sample !== 'string') false
 
   if (!isNaN(sample) && Number(sample) > 0 && Number(sample) < 15) {
     // sample = sample.match(/\d.*/gm);
