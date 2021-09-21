@@ -22,14 +22,10 @@ export default function dateSample(sample) {
 
   if (typeof sample !== 'string') return false;
 
-  if (sample) if (sample > 15 || sample < 0) return false;
-
-  if (!isNaN(sample) && Number(sample) > 0) {
-    // sample = sample.match(/\d.*/gm);
+  if (!isNaN(sample) && Number(sample) > 0 && Number(sample) < 15) {
+    sample = sample.match(/\d.*/gm);
     const N_0_over_N = MODERN_ACTIVITY / sample;
-
     const k = 0.693 / HALF_LIFE_PERIOD;
-
     let t = Math.ceil(Math.log(N_0_over_N) / k);
 
     return t;
