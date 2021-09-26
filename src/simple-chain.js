@@ -37,7 +37,7 @@ export default {
   },
   finishChain() {
     let returnChain = this.chain.join('~~')
-    this.chain = []
+    this.chain.length = 0
     return returnChain
   },
 }
