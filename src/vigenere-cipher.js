@@ -22,7 +22,24 @@ import { NotImplementedError } from '../extensions/index.js'
 export default class VigenereCipheringMachine {
   constructor(direction) {
     this.reverseTrue = direction
-    this.table = []
+    this.table = null
+  }
+
+  genTable() {
+    // alphabet shifting func
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+    const shiftedAlphabet = []
+    // console.log('111', shiftedAlphabet)
+    for (let i = 0; i < 26; i++) {
+      if (i === 0) {
+        shiftedAlphabet.push(alphabet.slice())
+      } else {
+        alphabet.push(alphabet.shift())
+        shiftedAlphabet.push(alphabet.slice())
+      }
+    }
+    // return shiftedAlphabet
+    return (this.table = shiftedAlphabet)
   }
 
   genKey(message, keyword) {
@@ -44,12 +61,13 @@ export default class VigenereCipheringMachine {
         key = key.slice(0, idx) + ' ' + key.slice(idx)
       }
     })
-    console.log(`keylength: ${key.length}, message length: ${message.length}`)
+    // console.log(`keylength: ${key.length}, message length: ${message.length}`)
     return key
   }
   // encrypting function
   encrypt(message, keyword) {
     if (!message || !keyword) throw new Error('Incorrect arguments!')
+    this.genTable()
     // encrypted array
     let encryptedArr
     const nonAlphChar = /[^A-Za-z]/g
@@ -57,36 +75,23 @@ export default class VigenereCipheringMachine {
     // generate key
     let keyGen = this.genKey(message, keyword)
 
-    // alphabet shifting func
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
-    let shiftedArr
-    function rotateArr(arr, rotNumTimes) {
-      // prevent mutation of alphabet by slice
-      arr = arr.slice()
-      for (let i = 0; i < rotNumTimes; i++) {
-        arr.push(arr.shift())
-      }
-      return (shiftedArr = arr)
-    }
     // let's encode the message
     let encrChar
     encryptedArr = message.split('').map((el, idx) => {
-      console.log(`\nel - ${el}, idx - ${idx}`)
+      // console.log(`\nel - ${el}, idx - ${idx}`)
 
       // check for non alphabetic LIKE COOL BOYZ DO
       if (!RegExp(/^\p{L}/, 'u').test(el)) {
-        console.log(`if - ${el} non-alphabetic`)
+        // console.log(`if - ${el} non-alphabetic`)
 
         return el
       } else {
         el = el.toLowerCase()
-        console.log(`else - ${el} alphabetic`)
-
-        shiftedArr = rotateArr(alphabet, alphabet.indexOf(el))
-        // console.log('shiftedArr', shiftedArr)
+        // console.log(`else - ${el} alphabetic`)
 
         // find index of key character in alphabet by index and
-        encrChar = shiftedArr[alphabet.indexOf(keyGen.charAt(idx))]
+
+        encrChar = this.table[this.table[0].indexOf(el)][this.table[0].indexOf(keyGen.charAt(idx))]
         return encrChar
       }
     })
@@ -95,7 +100,7 @@ export default class VigenereCipheringMachine {
 
   decrypt(mess, key) {
     if (!mess || !key) throw new Error('Incorrect arguments!')
-
+    this.genTable()
     // encrypted array
     let decryptedArr
     const nonAlphChar = /[^A-Za-z]/g
@@ -103,36 +108,24 @@ export default class VigenereCipheringMachine {
     // generate key
     let keyGen = this.genKey(mess, key)
 
-    // alphabet shifting func
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
-    let shiftedArr
-    function rotateArr(arr, rotNumTimes) {
-      // prevent mutation of alphabet by slice
-      arr = arr.slice()
-      for (let i = 0; i < rotNumTimes; i++) {
-        arr.push(arr.shift())
-      }
-      return (shiftedArr = arr)
-    }
     // let's decode the message
     let encrChar
     decryptedArr = mess.split('').map((el, idx) => {
-      console.log(`\nel - ${el}, idx - ${idx}`)
+      // console.log(`\nel - ${el}, idx - ${idx}`)
 
       // check for non alphabetic LIKE COOL BOYZ DO
       if (!RegExp(/^\p{L}/, 'u').test(el)) {
-        console.log(`if - ${el} non-alphabetic`)
+        // console.log(`if - ${el} non-alphabetic`)
         return el
       } else {
         el = el.toLowerCase()
-        console.log(`else - ${el} alphabetic`)
+        // console.log(`else - ${el} alphabetic`)
 
         // find index of key char in alphabet
-        // alphabet.indexOf(keyGen.charAt(idx))
-        shiftedArr = rotateArr(alphabet, alphabet.indexOf(keyGen.charAt(idx)))
+        this.table[this.table[0].indexOf(keyGen.charAt(idx))]
 
         // find el idx in shifted arr -> choose el with same index from normal alphabet
-        encrChar = alphabet[shiftedArr.indexOf(el)]
+        encrChar = this.table[0][this.table[this.table[0].indexOf(keyGen.charAt(idx))].indexOf(el)]
         return encrChar
       }
     })
@@ -148,7 +141,9 @@ export default class VigenereCipheringMachine {
 // console.log(directMachine.genKey('abc', 'def')) // def
 // console.log(directMachine.genKey('abc def123', 'ghi')) // def
 
-// console.log(reverseMachine)
+// check alphabet table
+// console.log(directMachine.genTable())
+// console.log(directMachine.table)
 
 // // 'must throw an Error if no args'
 
@@ -177,16 +172,14 @@ export default class VigenereCipheringMachine {
 // console.log(directMachine.encrypt('Samelengthkey', 'Samelengthkey')) // 'KAYIWIAMMOUIW' WORKING!!!
 // console.log(directMachine.encrypt('attack at dawn!', 'alphonse')) // 'AEIHQX SX DLLU!'  WORKING!!!
 // console.log(directMachine.encrypt('Example of sequence: 1, 2, 3, 4.', 'lilkey')) // 'PFLWTJP WQ CIOFMYMI: 1, 2, 3, 4.'  WORKING!!!
-// console.log(directMachine.encrypt('Same length key', 'Samelengthkey')) // 'KAYI WIAMMO UIW'
+// console.log(directMachine.encrypt('Same length key', 'Samelengthkey')) // 'KAYI WIAMMO UIW' WORKING!!!
 
 // // 'base decryption'
 // console.log(directMachine.decrypt('UWJJW XAGWLNFM VNNNDXHVWWL :)', 'js')) // 'LEARN FRONTEND DEVELOPMENT :)' WORKING!!!
 // console.log(directMachine.decrypt('ICWWQAM KECEIK JVZZT EADGG!', 'rollingscopes')) // 'ROLLING SCOPES SHOOL RULES!' WORKING!!!
 // console.log(directMachine.decrypt('TRVVFB VT JSUIFMYL!', 'learning')) // 'INVEST IN YOURSELF!' WORKING!!!
 // console.log(directMachine.decrypt('HSVD AJAL ^^', 'behappy')) // 'GOOD LUCK ^^' WORKING!!!
-
 // console.log(reverseMachine.encrypt('attack at dawn!', 'alphonse')) // '!ULLD XS XQHIEA' WORKING!!!
-
 // console.log(reverseMachine.decrypt('AEIHQX SX DLLU!', 'alphonse')) // '!NWAD TA KCATTA' WORKING!!!
 
 // // 'double-sided direct cryptography'
