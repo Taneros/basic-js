@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../extensions/index.js';
+import { NotImplementedError } from '../extensions/index.js'
 
 /**
  * Given an email address, return it's domain.
@@ -10,7 +10,14 @@ import { NotImplementedError } from '../extensions/index.js';
  * For the input 'prettyandsimple@example.com', the output should be 'example.com'
  *
  */
-export default function getEmailDomain(/* email */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+export default function getEmailDomain(email) {
+  const splitEmail = email.split('@')
+  // console.log(splitEmail)
+  return splitEmail[splitEmail.length - 1]
 }
+
+console.log(getEmailDomain('prettyandsimple@example.com')) // , 'example.com')
+console.log(getEmailDomain('someaddress@yandex.ru')) //, 'yandex.ru')
+console.log(getEmailDomain('very.unusual.@.unusual.com@usual.com')) //, 'usual.com')
+console.log(getEmailDomain('admin@mailserver2.ru')) //, 'mailserver2.ru')
+console.log(getEmailDomain('example-indeed@strange-example.com')) //, 'strange-example.com')
